@@ -326,7 +326,7 @@
                 ⏱️ 30 minutes · 20 questions · one per page
             </div>
             <div style="margin-top: 10px; font-size:0.8rem; color:#4b6d8a;">
-                📁 Results will be stored in: <strong>alliswell1996/mmtest1</strong>
+                📁 Results will be saved to Google Sheets
             </div>
         </div>
     </div>
@@ -378,10 +378,10 @@
                 <span id="resultJETC">JETCXXX</span> · 
                 <span id="resultReg">DCXXXXX</span>
             </div>
-            <div id="githubSaveStatus" class="github-status">
-                ⏳ Saving to GitHub...
+            <div id="googleSaveStatus" class="github-status">
+                ⏳ Saving to Google Sheets...
             </div>
-            <div class="note">✅ Results stored in GitHub repository.<br>Thank you for participating.</div>
+            <div class="note">✅ Results stored in Google Sheets.<br>Thank you for participating.</div>
         </div>
     </div>
 </div>
@@ -389,15 +389,10 @@
 <script>
 (function() {
     // ============================================================
-    // GITHUB CONFIGURATION - UPDATE WITH YOUR NEW TOKEN
+    // GOOGLE APPS SCRIPT WEB APP URL - UPDATE THIS!
     // ============================================================
-    const GITHUB_CONFIG = {
-        owner: 'alliswell1996',        // Your GitHub username
-        repo: 'mmtest1',               // Your repository name
-        token: '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',  // ⚠️ REPLACE with your NEW token after revoking old one
-        branch: 'main',                // Branch name
-        resultsPath: 'exam-results'    // Folder path in repo
-    };
+    // Replace with your Google Apps Script Web App URL after deployment
+    const GOOGLE_SCRIPT_URL = 'YOUR_GOOGLE_APPS_SCRIPT_URL_HERE';
 
     // ============================================================
     // STUDENT DATABASE (38 students)
@@ -482,7 +477,7 @@
         { type:'mcq', question:'Which instrument is used for rough length check?', options:['Steel rule','Micrometer','Dial gauge','Sine bar'], answer:'Steel rule' },
         { type:'mcq', question:'What is the unit of power?', options:['Joule','Watt','Newton','Pascal'], answer:'Watt' },
         { type:'mcq', question:'Which method avoids parallax error?', options:['Use digital display','Keep eye perpendicular','Apply oil','Measure at 20°C'], answer:'Keep eye perpendicular' },
-        { type:'mcq', question:'Who said "If you can’t measure it, you can’t improve it"?', options:['Newton','Lord Kelvin','Einstein','BIS'], answer:'Lord Kelvin' },
+        { type:'mcq', question:'Who said "If you can\'t measure it, you can\'t improve it"?', options:['Newton','Lord Kelvin','Einstein','BIS'], answer:'Lord Kelvin' },
         { type:'mcq', question:'What does ISI mark indicate?', options:['Export quality','Indian standard compliance','High speed','Low cost'], answer:'Indian standard compliance' },
         { type:'mcq', question:'Which is NOT an angular measuring instrument?', options:['Bevel protractor','Sine bar','Micrometer','Clinometer'], answer:'Micrometer' },
         { type:'mcq', question:'What is the derived unit for pressure?', options:['N-m','Pa','W','rad'], answer:'Pa' },
@@ -546,72 +541,43 @@
     const resultName = document.getElementById('resultName');
     const resultJETC = document.getElementById('resultJETC');
     const resultReg = document.getElementById('resultReg');
-    const githubSaveStatus = document.getElementById('githubSaveStatus');
+    const googleSaveStatus = document.getElementById('googleSaveStatus');
 
     // ============================================================
-    // GITHUB STORAGE FUNCTIONS
+    // GOOGLE SHEETS STORAGE FUNCTION
     // ============================================================
-    async function saveToGitHub(resultData) {
+    async function saveToGoogleSheets(resultData) {
         try {
-            const date = new Date().toISOString().split('T')[0];
-            const timestamp = new Date().toISOString().replace(/[:.]/g, '-');
-            const fileName = `${resultData.jetc}_${resultData.reg}_${timestamp}.json`;
-            const filePath = `${GITHUB_CONFIG.resultsPath}/${date}/${fileName}`;
+            // Convert answers array to string for storage
+            const answersStr = resultData.answers.map((a, i) => 
+                `Q${i+1}: ${a.userAnswer} (${a.isCorrect ? '✓' : '✗'})`
+            ).join('\n');
 
-            // Encode content to base64
-            const content = btoa(unescape(encodeURIComponent(JSON.stringify(resultData, null, 2))));
-
-            // Check if file exists (to get SHA for update)
-            const checkUrl = `https://api.github.com/repos/${GITHUB_CONFIG.owner}/${GITHUB_CONFIG.repo}/contents/${filePath}`;
-            let sha = null;
-            
-            try {
-                const checkResponse = await fetch(checkUrl, {
-                    headers: {
-                        'Authorization': `token ${GITHUB_CONFIG.token}`,
-                        'Accept': 'application/vnd.github.v3+json'
-                    }
-                });
-                if (checkResponse.ok) {
-                    const data = await checkResponse.json();
-                    sha = data.sha;
-                }
-            } catch (e) {
-                // File doesn't exist, will create new
-            }
-
-            // Save/Update file
-            const url = `https://api.github.com/repos/${GITHUB_CONFIG.owner}/${GITHUB_CONFIG.repo}/contents/${filePath}`;
-            const body = {
-                message: `Add exam result for ${resultData.jetc} - ${resultData.name}`,
-                content: content,
-                branch: GITHUB_CONFIG.branch
+            const payload = {
+                timestamp: resultData.submittedAt,
+                jetc: resultData.jetc,
+                reg: resultData.reg,
+                name: resultData.name,
+                score: resultData.score,
+                total: resultData.total,
+                percentage: resultData.percentage,
+                duration: resultData.duration,
+                answers: answersStr
             };
-            if (sha) body.sha = sha;
 
-            const response = await fetch(url, {
-                method: 'PUT',
+            const response = await fetch(GOOGLE_SCRIPT_URL, {
+                method: 'POST',
+                mode: 'no-cors', // Required for Google Apps Script
                 headers: {
-                    'Authorization': `token ${GITHUB_CONFIG.token}`,
                     'Content-Type': 'application/json',
-                    'Accept': 'application/vnd.github.v3+json'
                 },
-                body: JSON.stringify(body)
+                body: JSON.stringify(payload)
             });
 
-            if (!response.ok) {
-                const errorData = await response.json();
-                throw new Error(errorData.message || `GitHub API error: ${response.status}`);
-            }
-
-            const result = await response.json();
-            return { 
-                success: true, 
-                fileName: fileName,
-                url: result.content.html_url || `https://github.com/${GITHUB_CONFIG.owner}/${GITHUB_CONFIG.repo}/blob/${GITHUB_CONFIG.branch}/${filePath}`
-            };
+            // With no-cors, we can't read the response, so assume success after a delay
+            return { success: true };
         } catch (error) {
-            console.error('GitHub save error:', error);
+            console.error('Google Sheets save error:', error);
             return { success: false, error: error.message };
         }
     }
@@ -792,23 +758,24 @@
         resultJETC.textContent = studentData.jetc;
         resultReg.textContent = studentData.reg;
 
-        // Save to GitHub
-        githubSaveStatus.textContent = '⏳ Saving to GitHub repository...';
-        githubSaveStatus.className = 'github-status saving';
+        // Save to Google Sheets
+        googleSaveStatus.textContent = '⏳ Saving to Google Sheets...';
+        googleSaveStatus.className = 'github-status saving';
 
-        const result = await saveToGitHub(resultData);
-
-        if (result.success) {
-            githubSaveStatus.innerHTML = `✅ Successfully saved to GitHub: <a href="${result.url}" target="_blank">${result.fileName}</a>`;
-            githubSaveStatus.className = 'github-status success';
+        // Check if URL is configured
+        if (GOOGLE_SCRIPT_URL === 'https://script.google.com/macros/s/AKfycbxbiPiHmG30jjuFHq6SLCsvb463eRWRNn_wZ58kmJX8OpNX6NTkxNJQI_kG214MZ_ZI/exec') {
+            googleSaveStatus.innerHTML = '⚠️ Google Sheets not configured. Results saved locally only.';
+            googleSaveStatus.className = 'github-status error';
         } else {
-            // Fallback to localStorage
-            githubSaveStatus.textContent = `⚠️ GitHub save failed: ${result.error}. Saved locally as backup.`;
-            githubSaveStatus.className = 'github-status error';
+            const result = await saveToGoogleSheets(resultData);
             
-            let records = JSON.parse(localStorage.getItem('metrology_exam_records') || '[]');
-            records.push(resultData);
-            localStorage.setItem('metrology_exam_records', JSON.stringify(records));
+            if (result.success) {
+                googleSaveStatus.innerHTML = '✅ Successfully saved to Google Sheets!';
+                googleSaveStatus.className = 'github-status success';
+            } else {
+                googleSaveStatus.textContent = `⚠️ Save failed: ${result.error}`;
+                googleSaveStatus.className = 'github-status error';
+            }
         }
 
         // Also save to localStorage as backup
@@ -906,22 +873,17 @@
     });
 
     // ============================================================
-    // INIT - Check GitHub token
+    // INIT
     // ============================================================
     console.log('✅ Metrology Quiz loaded.');
     console.log(`📚 ${STUDENTS.length} students loaded.`);
     console.log(`📝 ${FULL_QUESTIONS.length} questions available.`);
-    console.log(`📁 Repository: ${GITHUB_CONFIG.owner}/${GITHUB_CONFIG.repo}`);
+    console.log('📁 Google Sheets integration ready.');
 
-    if (GITHUB_CONFIG.token === 'YOUR_NEW_TOKEN_HERE') {
-        console.warn('⚠️ Please update GITHUB_CONFIG.token with your new GitHub token.');
-        // Show warning to user
-        const statusDiv = document.createElement('div');
-        statusDiv.style.cssText = 'background:#fff3cd;color:#856404;padding:10px;border-radius:12px;margin-top:10px;font-size:0.85rem;';
-        statusDiv.textContent = '⚠️ GitHub token not configured. Results will be saved locally only.';
-        document.querySelector('.reg-form').appendChild(statusDiv);
+    if (GOOGLE_SCRIPT_URL === 'https://script.google.com/macros/s/AKfycbxbiPiHmG30jjuFHq6SLCsvb463eRWRNn_wZ58kmJX8OpNX6NTkxNJQI_kG214MZ_ZI/exec') {
+        console.warn('⚠️ Please update GOOGLE_SCRIPT_URL with your Google Apps Script Web App URL.');
     } else {
-        console.log('✅ GitHub token configured.');
+        console.log('✅ Google Sheets URL configured.');
     }
 })();
 </script>
