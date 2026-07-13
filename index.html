@@ -376,6 +376,10 @@
     // GOOGLE SHEETS FUNCTION
     // ============================================================
     async function saveToGoogleSheets(resultData) {
+        console.log('Starting save to Google Sheets...');
+        console.log('URL:', GOOGLE_SCRIPT_URL);
+        console.log('Data:', resultData);
+        
         try {
             const answersStr = resultData.answers.map((a, i) => 
                 'Q' + (i+1) + ': ' + a.userAnswer + ' (' + (a.isCorrect ? 'PASS' : 'FAIL') + ')'
@@ -393,15 +397,19 @@
                 answers: answersStr
             };
 
-            await fetch(GOOGLE_SCRIPT_URL, {
+            console.log('Payload:', payload);
+
+            const response = await fetch(GOOGLE_SCRIPT_URL, {
                 method: 'POST',
                 mode: 'no-cors',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(payload)
             });
 
+            console.log('Fetch completed');
             return { success: true };
         } catch (error) {
+            console.error('Save error:', error);
             return { success: false, error: error.message };
         }
     }
@@ -537,11 +545,16 @@
     }
 
     async function submitExam() {
-        if (examSubmitted) return;
+        console.log('submitExam called');
+        if (examSubmitted) {
+            console.log('Already submitted');
+            return;
+        }
         examSubmitted = true;
         clearInterval(timerInterval);
         
         const score = calculateScore();
+        console.log('Score calculated:', score);
         const duration = getDuration();
         const percentage = ((score / 20) * 100).toFixed(1);
         const answersDetail = getStudentAnswers();
@@ -569,18 +582,23 @@
 
         // Save to Google Sheets
         if (GOOGLE_SCRIPT_URL === 'YOUR_GOOGLE_APPS_SCRIPT_URL_HERE') {
-            googleSaveStatus.textContent = 'Google Sheets URL not configured. Saved locally.';
+            googleSaveStatus.textContent = 'URL not configured. Saved locally only.';
             googleSaveStatus.className = 'save-status error';
+            alert('Exam submitted! (Saved locally only)');
         } else {
-            googleSaveStatus.textContent = 'Saving...';
+            googleSaveStatus.textContent = 'Saving to Google Sheets...';
             googleSaveStatus.className = 'save-status saving';
+            
             const result = await saveToGoogleSheets(resultData);
+            
             if (result.success) {
                 googleSaveStatus.textContent = 'Saved to Google Sheets!';
                 googleSaveStatus.className = 'save-status success';
+                alert('Exam submitted successfully! Check Google Sheet.');
             } else {
                 googleSaveStatus.textContent = 'Save failed: ' + result.error;
                 googleSaveStatus.className = 'save-status error';
+                alert('Exam submitted but save failed: ' + result.error);
             }
         }
 
@@ -595,13 +613,14 @@
     // ============================================================
     document.addEventListener('visibilitychange', function() {
         if (document.hidden && !examSubmitted) {
-            alert('Do not switch tabs!');
+            console.log('Tab switch detected!');
         }
     });
 
     document.addEventListener('keydown', function(e) {
-        if (e.key === 'F12' || (e.ctrlKey && e.shiftKey && ['I','J','C'].includes(e.key.toUpperCase()))) {
-            e.preventDefault();
+        // Allow developer tools on F12
+        if (e.key === 'F12') {
+            console.log('F12 pressed');
         }
     });
 
@@ -651,14 +670,13 @@
 
     submitBtn.addEventListener('click', function() {
         if (examSubmitted) return;
-        if (confirm('Submit exam?')) {
-            submitExam();
-        }
+        console.log('Submit button clicked');
+        submitExam();
     });
 
     // Init
     console.log('Metrology Quiz loaded');
 })();
 </script>
-<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a1a937eceb297fd3',t:'MTc4Mzk1NTQ2OA=='};var a=document.createElement('script');a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a1a93fc1dadfff7b',t:'MTc4Mzk1NTc4OQ=='};var a=document.createElement('script');a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
 </html>
