@@ -763,7 +763,7 @@
         googleSaveStatus.className = 'github-status saving';
 
         // Check if URL is configured
-        if (GOOGLE_SCRIPT_URL === 'https://script.google.com/macros/s/AKfycbxbiPiHmG30jjuFHq6SLCsvb463eRWRNn_wZ58kmJX8OpNX6NTkxNJQI_kG214MZ_ZI/exec') {
+        if (GOOGLE_SCRIPT_URL === 'https://script.google.com/macros/s/AKfycbyTq4yR6u8ZGJD72NQdhdhfXsjxG5jL6XoQJpaD0FdYAK6S4AXASMcqwNHyW34ZAxU/exec') {
             googleSaveStatus.innerHTML = '⚠️ Google Sheets not configured. Results saved locally only.';
             googleSaveStatus.className = 'github-status error';
         } else {
@@ -880,7 +880,7 @@
     console.log(`📝 ${FULL_QUESTIONS.length} questions available.`);
     console.log('📁 Google Sheets integration ready.');
 
-    if (GOOGLE_SCRIPT_URL === 'https://script.google.com/macros/s/AKfycbxbiPiHmG30jjuFHq6SLCsvb463eRWRNn_wZ58kmJX8OpNX6NTkxNJQI_kG214MZ_ZI/exec') {
+    if (GOOGLE_SCRIPT_URL === 'https://script.google.com/macros/s/AKfycbyTq4yR6u8ZGJD72NQdhdhfXsjxG5jL6XoQJpaD0FdYAK6S4AXASMcqwNHyW34ZAxU/exec') {
         console.warn('⚠️ Please update GOOGLE_SCRIPT_URL with your Google Apps Script Web App URL.');
     } else {
         console.log('✅ Google Sheets URL configured.');
