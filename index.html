@@ -5,12 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
     <title>Metrology Quiz - JE Chennai</title>
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            user-select: none;
-        }
+        * { margin: 0; padding: 0; box-sizing: border-box; user-select: none; }
         body {
             font-family: 'Segoe UI', Roboto, system-ui, sans-serif;
             background: #0b1a2f;
@@ -28,7 +23,6 @@
             box-shadow: 0 20px 40px rgba(0,0,0,0.6);
             overflow: hidden;
             padding: 24px 24px 32px;
-            position: relative;
         }
         .header {
             display: flex;
@@ -39,12 +33,7 @@
             margin-bottom: 20px;
             flex-wrap: wrap;
         }
-        .logo {
-            font-weight: 700;
-            font-size: 1.2rem;
-            color: #0b1a2f;
-            letter-spacing: -0.3px;
-        }
+        .logo { font-weight: 700; font-size: 1.2rem; color: #0b1a2f; }
         .logo span { color: #c44536; }
         .reg-badge {
             background: #1e3a5f;
@@ -53,7 +42,6 @@
             border-radius: 40px;
             font-size: 0.75rem;
             font-weight: 600;
-            letter-spacing: 0.5px;
         }
         .welcome-box {
             background: #eef4fa;
@@ -63,14 +51,10 @@
             display: flex;
             align-items: center;
             gap: 10px;
-            flex-wrap: wrap;
             font-weight: 500;
-            color: #0b1a2f;
+            flex-wrap: wrap;
         }
-        .welcome-box .name {
-            font-weight: 700;
-            color: #00337a;
-        }
+        .welcome-box .name { font-weight: 700; color: #00337a; }
         .timer {
             margin-left: auto;
             background: #0b1a2f;
@@ -79,94 +63,48 @@
             border-radius: 40px;
             font-family: monospace;
             font-size: 1.2rem;
-            letter-spacing: 1px;
         }
-        .timer.warning {
-            background: #c44536;
-            animation: blink 1s infinite;
-        }
-        @keyframes blink {
-            0%, 100% { opacity: 1; }
-            50% { opacity: 0.5; }
-        }
+        .timer.warning { background: #c44536; animation: blink 1s infinite; }
+        @keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0.5; } }
         .question-card {
             background: #f9fcff;
             border-radius: 28px;
             padding: 24px 20px;
-            box-shadow: inset 0 1px 4px rgba(0,0,0,0.02), 0 8px 18px rgba(0,20,40,0.08);
             margin: 6px 0 18px;
         }
         .q-number {
             color: #1e3a5f;
             font-weight: 600;
             font-size: 0.9rem;
-            letter-spacing: 0.3px;
             margin-bottom: 12px;
             display: flex;
             justify-content: space-between;
             border-bottom: 1px dashed #cddcec;
             padding-bottom: 6px;
         }
-        .q-text {
-            font-size: 1.25rem;
-            font-weight: 500;
-            line-height: 1.5;
-            margin-bottom: 24px;
-            color: #0a1e32;
-        }
-        .options {
-            display: flex;
-            flex-direction: column;
-            gap: 12px;
-        }
+        .q-text { font-size: 1.25rem; font-weight: 500; line-height: 1.5; margin-bottom: 24px; }
+        .options { display: flex; flex-direction: column; gap: 12px; }
         .opt-item {
             background: white;
             border: 2px solid #dce6f0;
             border-radius: 60px;
             padding: 12px 20px;
             font-size: 1rem;
-            font-weight: 500;
-            color: #1a2f44;
             cursor: pointer;
-            transition: 0.1s ease;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.02);
+            transition: 0.1s;
         }
-        .opt-item:hover {
-            background: #e7effa;
-            border-color: #6b8db5;
-        }
-        .opt-item.selected {
-            background: #1e3a5f;
-            border-color: #1e3a5f;
-            color: white;
-        }
-        .opt-item input[type="radio"] {
-            display: none;
-        }
+        .opt-item:hover { background: #e7effa; border-color: #6b8db5; }
+        .opt-item.selected { background: #1e3a5f; border-color: #1e3a5f; color: white; }
         .fill-input {
             width: 100%;
             padding: 14px 20px;
             font-size: 1rem;
             border: 2px solid #dce6f0;
             border-radius: 60px;
-            background: white;
             outline: none;
-            transition: 0.15s;
-            font-weight: 500;
-            color: #0b1a2f;
         }
-        .fill-input:focus {
-            border-color: #1e3a5f;
-            box-shadow: 0 0 0 3px rgba(30,58,95,0.2);
-        }
-        .action-bar {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-top: 24px;
-            flex-wrap: wrap;
-            gap: 10px;
-        }
+        .fill-input:focus { border-color: #1e3a5f; box-shadow: 0 0 0 3px rgba(30,58,95,0.2); }
+        .action-bar { display: flex; justify-content: space-between; margin-top: 24px; gap: 10px; flex-wrap: wrap; }
         .btn {
             background: #eef4fa;
             border: none;
@@ -174,164 +112,63 @@
             border-radius: 60px;
             font-weight: 600;
             font-size: 0.95rem;
-            color: #1a2f44;
             cursor: pointer;
             transition: 0.15s;
-            display: inline-flex;
-            align-items: center;
-            gap: 6px;
-            border: 1px solid transparent;
         }
-        .btn-primary {
-            background: #1e3a5f;
-            color: white;
-            box-shadow: 0 4px 8px rgba(0,20,40,0.2);
-        }
-        .btn-primary:hover {
-            background: #14304e;
-            transform: scale(0.97);
-        }
-        .btn-primary:disabled {
-            opacity: 0.5;
-            pointer-events: none;
-        }
-        .btn-outline {
-            background: transparent;
-            border: 2px solid #b6cbd9;
-        }
-        .btn-outline:hover {
-            background: #e0eaf3;
-        }
-        .btn-success {
-            background: #2d7d46;
-            color: white;
-        }
-        .btn-success:hover {
-            background: #1f5f35;
-        }
-        .reg-form {
-            padding: 8px 0;
-        }
-        .reg-form label {
-            font-weight: 600;
-            color: #1a2f44;
-            display: block;
-            margin-bottom: 8px;
-        }
+        .btn-primary { background: #1e3a5f; color: white; }
+        .btn-primary:hover { background: #14304e; }
+        .btn-outline { border: 2px solid #b6cbd9; }
+        .btn-outline:hover { background: #e0eaf3; }
+        .btn-success { background: #2d7d46; color: white; }
+        .reg-form label { font-weight: 600; display: block; margin-bottom: 8px; }
         .reg-form input {
             width: 100%;
             padding: 16px 20px;
             border-radius: 60px;
             border: 2px solid #d0deec;
             font-size: 1rem;
-            background: white;
             outline: none;
             margin-bottom: 16px;
             text-transform: uppercase;
         }
-        .reg-form input:focus {
-            border-color: #1e3a5f;
-        }
-        .reg-form .btn {
-            margin-top: 12px;
-            width: 100%;
-            justify-content: center;
-        }
-        .hidden {
-            display: none !important;
-        }
-        .result-box {
-            background: #eef4fa;
-            border-radius: 40px;
-            padding: 28px;
-            text-align: center;
-        }
-        .result-box .score {
-            font-size: 4.2rem;
-            font-weight: 800;
-            color: #0b1a2f;
-        }
-        .result-box .sub {
-            font-size: 1rem;
-            color: #2f4d6e;
-        }
-        .note {
-            font-size: 0.9rem;
-            color: #3d5c7a;
-            margin-top: 12px;
-        }
-        .auth-error {
-            color: #b13e3e;
-            font-weight: 500;
-            margin-top: 10px;
-            padding: 10px;
-            background: #fee;
-            border-radius: 12px;
-        }
-        .auth-success {
-            color: #1f5f35;
-            font-weight: 500;
-            margin-top: 10px;
-            padding: 10px;
-            background: #e6f4e8;
-            border-radius: 12px;
-        }
-        .github-status {
-            font-size: 0.85rem;
-            margin-top: 15px;
-            padding: 12px;
-            border-radius: 12px;
-            background: #f0f7ff;
-            color: #4b6d8a;
-        }
-        .github-status.success {
-            background: #e6f4e8;
-            color: #2d7d46;
-        }
-        .github-status.error {
-            background: #fee;
-            color: #c44536;
-        }
-        .github-status.saving {
-            background: #fff3cd;
-            color: #856404;
-        }
-        @media (max-width: 500px) {
-            .app-container { padding: 16px; }
-            .q-text { font-size: 1.1rem; }
-        }
+        .reg-form input:focus { border-color: #1e3a5f; }
+        .reg-form .btn { width: 100%; justify-content: center; margin-top: 12px; }
+        .hidden { display: none !important; }
+        .result-box { background: #eef4fa; border-radius: 40px; padding: 28px; text-align: center; }
+        .result-box .score { font-size: 4.2rem; font-weight: 800; color: #0b1a2f; }
+        .result-box .sub { font-size: 1rem; color: #2f4d6e; }
+        .note { font-size: 0.9rem; color: #3d5c7a; margin-top: 12px; }
+        .auth-error { color: #b13e3e; margin-top: 10px; padding: 10px; background: #fee; border-radius: 12px; }
+        .auth-success { color: #1f5f35; margin-top: 10px; padding: 10px; background: #e6f4e8; border-radius: 12px; }
+        .save-status { font-size: 0.85rem; margin-top: 15px; padding: 12px; border-radius: 12px; }
+        .save-status.success { background: #e6f4e8; color: #2d7d46; }
+        .save-status.error { background: #fee; color: #c44536; }
+        .save-status.saving { background: #fff3cd; color: #856404; }
+        @media (max-width: 500px) { .app-container { padding: 16px; } .q-text { font-size: 1.1rem; } }
     </style>
 </head>
 <body>
 <div class="app-container" id="appContainer">
-    <!-- REGISTRATION VIEW -->
     <div id="registrationView">
         <div class="header">
             <div class="logo">⚙️ <span>METRO</span>LOGY</div>
             <div class="reg-badge">JE Chennai · DMT0303</div>
         </div>
         <div style="padding: 6px 0 16px;">
-            <p style="color: #1e3a5f; font-weight: 500; margin-bottom: 16px;">🔐 Student Authentication</p>
+            <p style="color: #1e3a5f; font-weight: 500;">🔐 Student Authentication</p>
         </div>
         <div class="reg-form">
             <label for="jetcInput">JETC Number</label>
             <input type="text" id="jetcInput" placeholder="e.g., JETC045" autocomplete="off">
-            
             <label for="regInput">Registration Number</label>
             <input type="text" id="regInput" placeholder="e.g., DC2529401" autocomplete="off">
-            
             <button class="btn btn-primary" id="authBtn">🔑 Verify & Start Exam</button>
             <div id="authMessage"></div>
-            <div style="margin-top: 16px; font-size:0.85rem; color:#3f5f7f;">
-                ⏱️ 30 minutes · 20 questions · one per page
-            </div>
-            <div style="margin-top: 10px; font-size:0.8rem; color:#4b6d8a;">
-                📁 Results will be saved to Google Sheets
-            </div>
+            <div style="margin-top: 16px; font-size:0.85rem; color:#3f5f7f;">⏱️ 30 minutes · 20 questions · one per page</div>
+            <div style="margin-top: 10px; font-size:0.8rem; color:#4b6d8a;">📁 Results saved to Google Sheets</div>
         </div>
     </div>
 
-    <!-- EXAM VIEW -->
     <div id="examView" class="hidden">
         <div class="header">
             <div class="logo">⚙️ <span>METRO</span>LOGY</div>
@@ -341,36 +178,32 @@
             <span>👋 Welcome, <span class="name" id="studentName">Candidate</span></span>
             <span class="timer" id="timerDisplay">30:00</span>
         </div>
-
-        <div class="question-card" id="questionCard">
+        <div class="question-card">
             <div class="q-number">
                 <span id="qNumLabel">Question 1 / 20</span>
                 <span id="qTypeLabel" style="background:#dce6f0; padding:0 14px; border-radius:40px; font-size:0.7rem;">MCQ</span>
             </div>
-            <div class="q-text" id="qText">Loading question...</div>
+            <div class="q-text" id="qText">Loading...</div>
             <div id="optionsContainer" class="options"></div>
             <div id="fillContainer" class="hidden">
-                <input type="text" class="fill-input" id="fillInput" placeholder="Type your answer (one word)">
+                <input type="text" class="fill-input" id="fillInput" placeholder="Type your answer">
             </div>
         </div>
-
         <div class="action-bar">
             <button class="btn btn-outline" id="prevBtn">◀ Previous</button>
-            <span style="font-weight:500; color:#1e3a5f;" id="progressIndicator">1 / 20</span>
+            <span id="progressIndicator">1 / 20</span>
             <button class="btn btn-primary" id="nextBtn">Next ▶</button>
             <button class="btn btn-success" id="submitExamBtn">📤 Submit</button>
         </div>
-        <div style="margin-top:10px; font-size:0.8rem; color:#4b6d8a; text-align:right;">⚠️ Do not minimize or switch tabs</div>
     </div>
 
-    <!-- RESULT VIEW -->
     <div id="resultView" class="hidden">
         <div class="header">
             <div class="logo">📊 <span>RESULT</span></div>
             <div class="reg-badge">JE Chennai</div>
         </div>
         <div class="result-box">
-            <div style="font-size:1.5rem; font-weight:600; color:#0b1a2f;">🎯 Your Score</div>
+            <div style="font-size:1.5rem; font-weight:600;">🎯 Your Score</div>
             <div class="score" id="finalScore">0</div>
             <div class="sub">out of 20</div>
             <div style="margin-top:18px; background:white; border-radius:40px; padding:14px; border:2px solid #dce6f0;">
@@ -378,10 +211,8 @@
                 <span id="resultJETC">JETCXXX</span> · 
                 <span id="resultReg">DCXXXXX</span>
             </div>
-            <div id="googleSaveStatus" class="github-status">
-                ⏳ Saving to Google Sheets...
-            </div>
-            <div class="note">✅ Results stored in Google Sheets.<br>Thank you for participating.</div>
+            <div id="googleSaveStatus" class="save-status">⏳ Saving...</div>
+            <div class="note">✅ Results stored in Google Sheets.<br>Thank you!</div>
         </div>
     </div>
 </div>
@@ -389,9 +220,8 @@
 <script>
 (function() {
     // ============================================================
-    // GOOGLE APPS SCRIPT WEB APP URL - UPDATE THIS!
+    // GOOGLE APPS SCRIPT WEB APP URL
     // ============================================================
-    // Replace with your Google Apps Script Web App URL after deployment
     const GOOGLE_SCRIPT_URL = 'YOUR_GOOGLE_APPS_SCRIPT_URL_HERE';
 
     // ============================================================
@@ -442,36 +272,35 @@
     // 60 QUESTIONS (50 MCQ + 10 FILL)
     // ============================================================
     const FULL_QUESTIONS = [
-        // MCQs (0-49)
-        { type:'mcq', question:'Which unit is used for measuring motor shaft diameter in metrology?', options:['Metre','Millimetre','Kelvin','Ampere'], answer:'Millimetre' },
+        { type:'mcq', question:'Which unit is used for measuring motor shaft diameter?', options:['Metre','Millimetre','Kelvin','Ampere'], answer:'Millimetre' },
         { type:'mcq', question:'What does a dial gauge measure at JE Chennai?', options:['Motor torque','Commutator runout','Winding temperature','Angular speed'], answer:'Commutator runout' },
-        { type:'mcq', question:'Which instrument gives 0.001 mm resolution for shaft measurement?', options:['Steel rule','Vernier caliper','Digital micrometer','Bevel protractor'], answer:'Digital micrometer' },
+        { type:'mcq', question:'Which instrument gives 0.001 mm resolution?', options:['Steel rule','Vernier caliper','Digital micrometer','Bevel protractor'], answer:'Digital micrometer' },
         { type:'mcq', question:'Which is a fundamental SI unit?', options:['Newton','Joule','Ampere','Pascal'], answer:'Ampere' },
         { type:'mcq', question:'What is the reference used for comparing motor shaft diameter?', options:['Steel rule','Master gauge block','Sine bar','Spirit level'], answer:'Master gauge block' },
         { type:'mcq', question:'Which error occurs due to eye not perpendicular to scale?', options:['Systematic','Random','Parallax','Loading'], answer:'Parallax' },
-        { type:'mcq', question:'Which instrument is used to check 15° angle of a workpiece?', options:['Sine bar','Dial gauge','Micrometer','Steel rule'], answer:'Sine bar' },
-        { type:'mcq', question:'What does BIS certification ensure for JE Chennai motors?', options:['High speed','Indian quality & safety','Low cost','Export only'], answer:'Indian quality & safety' },
+        { type:'mcq', question:'Which instrument is used to check 15° angle?', options:['Sine bar','Dial gauge','Micrometer','Steel rule'], answer:'Sine bar' },
+        { type:'mcq', question:'What does BIS certification ensure?', options:['High speed','Indian quality & safety','Low cost','Export only'], answer:'Indian quality & safety' },
         { type:'mcq', question:'Which is a derived SI unit?', options:['Metre','Kilogram','Watt','Second'], answer:'Watt' },
         { type:'mcq', question:'Metrology helps produce components with high ______?', options:['Cost','Precision','Weight','Colour'], answer:'Precision' },
         { type:'mcq', question:'What is the standard temperature for accurate measurement?', options:['20°C','25°C','30°C','15°C'], answer:'20°C' },
         { type:'mcq', question:'Which is NOT a factor affecting accuracy?', options:['Zero error','Parallax','Color of instrument','Temperature'], answer:'Color of instrument' },
         { type:'mcq', question:'What does a reliable instrument provide?', options:['Different readings','Same readings repeatedly','Zero error','High cost'], answer:'Same readings repeatedly' },
-        { type:'mcq', question:'Which category of error is due to floor vibration?', options:['Systematic','Random','Loading','Dynamic'], answer:'Random' },
+        { type:'mcq', question:'Which error is due to floor vibration?', options:['Systematic','Random','Loading','Dynamic'], answer:'Random' },
         { type:'mcq', question:'What is the main purpose of legal metrology?', options:['Increase profit','Prevent fraud in trade','Promote new units','Reduce measurement'], answer:'Prevent fraud in trade' },
         { type:'mcq', question:'Which unit is used for torque measurement?', options:['N-m','rad/s','W','Pa'], answer:'N-m' },
         { type:'mcq', question:'What should be done before using any measuring instrument?', options:['Check zero error','Apply oil','Heat it','Drop it'], answer:'Check zero error' },
-        { type:'mcq', question:'Which of these is a supplementary unit?', options:['Newton','Radian','Watt','Pascal'], answer:'Radian' },
+        { type:'mcq', question:'Which is a supplementary unit?', options:['Newton','Radian','Watt','Pascal'], answer:'Radian' },
         { type:'mcq', question:'Why is metrology essential in automobile industry?', options:['For painting','For interchangeability','For fuel','For tyre pressure'], answer:'For interchangeability' },
         { type:'mcq', question:'What is the resolution of a vernier caliper?', options:['0.5 mm','0.02 mm','0.001 mm','0.1 mm'], answer:'0.02 mm' },
         { type:'mcq', question:'Which error is controllable and repeatable?', options:['Random','Systematic','Parallax','Dynamic'], answer:'Systematic' },
-        { type:'mcq', question:'Which is a measuring comparator example?', options:['Steel rule','Digital micrometer','Sine bar','Spirit level'], answer:'Digital micrometer' },
+        { type:'mcq', question:'Which is a measuring comparator?', options:['Steel rule','Digital micrometer','Sine bar','Spirit level'], answer:'Digital micrometer' },
         { type:'mcq', question:'What does "precision" refer to?', options:['Closeness to true value','Repeatability','Range','Resolution'], answer:'Repeatability' },
-        { type:'mcq', question:'Which instrument is used to measure slope?', options:['Clinometer','Vernier','Micrometer','Dial gauge'], answer:'Clinometer' },
+        { type:'mcq', question:'Which instrument measures slope?', options:['Clinometer','Vernier','Micrometer','Dial gauge'], answer:'Clinometer' },
         { type:'mcq', question:'What is the SI unit of solid angle?', options:['Radian','Steradian','Degree','Gradian'], answer:'Steradian' },
         { type:'mcq', question:'What does "measurand" mean?', options:['Standard value','Quantity to be measured','Comparator','Reference'], answer:'Quantity to be measured' },
         { type:'mcq', question:'Which organization publishes Indian standards?', options:['ISO','BIS','ASTM','SAE'], answer:'BIS' },
         { type:'mcq', question:'What is the tolerance for JE Chennai motor shaft?', options:['±0.003 mm','±0.02 mm','±0.001 mm','±0.01 mm'], answer:'±0.003 mm' },
-        { type:'mcq', question:'Which of the following is NOT a fundamental unit?', options:['Metre','Kilogram','Newton','Ampere'], answer:'Newton' },
+        { type:'mcq', question:'Which is NOT a fundamental unit?', options:['Metre','Kilogram','Newton','Ampere'], answer:'Newton' },
         { type:'mcq', question:'What is the purpose of calibration?', options:['Increase speed','Ensure reliability','Change colour','Reduce cost'], answer:'Ensure reliability' },
         { type:'mcq', question:'Which error is due to time lag?', options:['Static','Dynamic','Random','Systematic'], answer:'Dynamic' },
         { type:'mcq', question:'Which instrument is used for rough length check?', options:['Steel rule','Micrometer','Dial gauge','Sine bar'], answer:'Steel rule' },
@@ -483,26 +312,26 @@
         { type:'mcq', question:'What is the derived unit for pressure?', options:['N-m','Pa','W','rad'], answer:'Pa' },
         { type:'mcq', question:'What is the first step that leads to control?', options:['Design','Measurement','Production','Inspection'], answer:'Measurement' },
         { type:'mcq', question:'Which instrument has 0.001 mm resolution?', options:['Steel rule','Vernier','Dial gauge','Micrometer'], answer:'Micrometer' },
-        { type:'mcq', question:'What is a loading error?', options:['Due to temperature','Due to instrument loading the measurand','Due to parallax','Due to vibration'], answer:'Due to instrument loading the measurand' },
+        { type:'mcq', question:'What is a loading error?', options:['Due to temperature','Due to instrument loading','Due to parallax','Due to vibration'], answer:'Due to instrument loading' },
         { type:'mcq', question:'What should be done with precision instruments after use?', options:['Store safely','Keep on floor','Mix with tools','Use as hammer'], answer:'Store safely' },
         { type:'mcq', question:'Which is a static error?', options:['Dynamic','Systematic','Parallax','Loading'], answer:'Systematic' },
         { type:'mcq', question:'What is the purpose of interchangeability?', options:['Increase cost','Reduce assembly issues','Increase weight','Reduce quality'], answer:'Reduce assembly issues' },
-        { type:'mcq', question:'Which of the following affects accuracy?', options:['Zero error','Resolution','Range','All of these'], answer:'All of these' },
-        { type:'mcq', question:'What does the "range" of an instrument mean?', options:['Minimum value','Maximum value','Min to max measurable','Resolution'], answer:'Min to max measurable' },
+        { type:'mcq', question:'Which affects accuracy?', options:['Zero error','Resolution','Range','All of these'], answer:'All of these' },
+        { type:'mcq', question:'What does "range" mean?', options:['Minimum value','Maximum value','Min to max measurable','Resolution'], answer:'Min to max measurable' },
         { type:'mcq', question:'Which is a derived unit?', options:['m','kg','N','A'], answer:'N' },
         { type:'mcq', question:'What is the benefit of standardization?', options:['Uniformity','Higher cost','Less quality','More defects'], answer:'Uniformity' },
-        { type:'mcq', question:'Which instrument measures motor speed in rad/s?', options:['Tachometer','Micrometer','Dial gauge','Sine bar'], answer:'Tachometer' },
+        { type:'mcq', question:'Which instrument measures motor speed?', options:['Tachometer','Micrometer','Dial gauge','Sine bar'], answer:'Tachometer' },
         // FILL IN (50-59)
         { type:'fill', question:'The science of measurement is called __________.', answer:'metrology' },
         { type:'fill', question:'The SI unit of electric current is __________.', answer:'ampere' },
-        { type:'fill', question:'A __________ gauge is used to check commutator runout at JE Chennai.', answer:'dial' },
+        { type:'fill', question:'A __________ gauge is used to check commutator runout.', answer:'dial' },
         { type:'fill', question:'BIS stands for Bureau of Indian __________.', answer:'standards' },
         { type:'fill', question:'__________ error occurs when eye is not perpendicular to scale.', answer:'parallax' },
         { type:'fill', question:'The standard reference temperature is __________ °C.', answer:'20' },
         { type:'fill', question:'A __________ bar is used for precise angle measurement.', answer:'sine' },
         { type:'fill', question:'The tolerance for motor shaft diameter is ±0.003 __________.', answer:'mm' },
         { type:'fill', question:'__________ is the closeness of a measurement to true value.', answer:'accuracy' },
-        { type:'fill', question:'In SI, the unit of solid angle is __________.', answer:'steradian' },
+        { type:'fill', question:'In SI, the unit of solid angle is __________.', answer:'steradian' }
     ];
 
     // ============================================================
@@ -517,13 +346,13 @@
     let studentData = null;
 
     // DOM refs
-    const regView = document.getElementById('registrationView');
-    const examView = document.getElementById('examView');
-    const resultView = document.getElementById('resultView');
     const jetcInput = document.getElementById('jetcInput');
     const regInput = document.getElementById('regInput');
     const authBtn = document.getElementById('authBtn');
     const authMessage = document.getElementById('authMessage');
+    const examView = document.getElementById('examView');
+    const resultView = document.getElementById('resultView');
+    const registrationView = document.getElementById('registrationView');
     const regBadge = document.getElementById('regBadge');
     const studentNameSpan = document.getElementById('studentName');
     const timerDisplay = document.getElementById('timerDisplay');
@@ -544,14 +373,13 @@
     const googleSaveStatus = document.getElementById('googleSaveStatus');
 
     // ============================================================
-    // GOOGLE SHEETS STORAGE FUNCTION
+    // GOOGLE SHEETS FUNCTION
     // ============================================================
     async function saveToGoogleSheets(resultData) {
         try {
-            // Convert answers array to string for storage
             const answersStr = resultData.answers.map((a, i) => 
-                `Q${i+1}: ${a.userAnswer} (${a.isCorrect ? '✓' : '✗'})`
-            ).join('\n');
+                'Q' + (i+1) + ': ' + a.userAnswer + ' (' + (a.isCorrect ? 'PASS' : 'FAIL') + ')'
+            ).join(' | ');
 
             const payload = {
                 timestamp: resultData.submittedAt,
@@ -565,19 +393,15 @@
                 answers: answersStr
             };
 
-            const response = await fetch(GOOGLE_SCRIPT_URL, {
+            await fetch(GOOGLE_SCRIPT_URL, {
                 method: 'POST',
-                mode: 'no-cors', // Required for Google Apps Script
-                headers: {
-                    'Content-Type': 'application/json',
-                },
+                mode: 'no-cors',
+                headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(payload)
             });
 
-            // With no-cors, we can't read the response, so assume success after a delay
             return { success: true };
         } catch (error) {
-            console.error('Google Sheets save error:', error);
             return { success: false, error: error.message };
         }
     }
@@ -590,23 +414,22 @@
         const reg = regInput.value.trim().toUpperCase();
 
         if (!jetc.startsWith('JETC')) {
-            authMessage.innerHTML = '<div class="auth-error">❌ JETC number must start with "JETC"</div>';
+            authMessage.innerHTML = '<div class="auth-error">JETC must start with "JETC"</div>';
             return false;
         }
         if (!reg.startsWith('DC')) {
-            authMessage.innerHTML = '<div class="auth-error">❌ Registration number must start with "DC"</div>';
+            authMessage.innerHTML = '<div class="auth-error">Reg must start with "DC"</div>';
             return false;
         }
 
         const student = STUDENTS.find(s => s.jetc === jetc && s.reg === reg);
-        
         if (!student) {
-            authMessage.innerHTML = '<div class="auth-error">❌ Invalid credentials. Please check your JETC and Registration numbers.</div>';
+            authMessage.innerHTML = '<div class="auth-error">Invalid credentials</div>';
             return false;
         }
 
         studentData = student;
-        authMessage.innerHTML = `<div class="auth-success">✅ Welcome ${student.name}! Starting exam...</div>`;
+        authMessage.innerHTML = '<div class="auth-success">Welcome ' + student.name + '!</div>';
         return true;
     }
 
@@ -622,8 +445,7 @@
     }
 
     function pick20Questions() {
-        const shuffled = shuffleArray([...FULL_QUESTIONS]);
-        return shuffled.slice(0, 20);
+        return shuffleArray([...FULL_QUESTIONS]).slice(0, 20);
     }
 
     function renderQuestion() {
@@ -631,66 +453,55 @@
         const q = currentQuestions[currentIndex];
         if (!q) return;
         
-        qNumLabel.textContent = `Question ${currentIndex+1} / ${currentQuestions.length}`;
+        qNumLabel.textContent = 'Question ' + (currentIndex+1) + ' / ' + currentQuestions.length;
         qTypeLabel.textContent = q.type === 'mcq' ? 'MCQ' : 'FILL';
         qText.textContent = q.question;
-
         optionsContainer.classList.add('hidden');
         fillContainer.classList.add('hidden');
         optionsContainer.innerHTML = '';
 
         if (q.type === 'mcq') {
             optionsContainer.classList.remove('hidden');
-            const selectedVal = answers[currentIndex]?.selected || null;
+            const selectedVal = answers[currentIndex] ? answers[currentIndex].selected : null;
             q.options.forEach(opt => {
                 const div = document.createElement('div');
                 div.className = 'opt-item';
                 if (selectedVal === opt) div.classList.add('selected');
                 div.textContent = opt;
-                div.dataset.value = opt;
                 div.addEventListener('click', function() {
                     if (examSubmitted) return;
-                    this.parentNode.querySelectorAll('.opt-item').forEach(el => el.classList.remove('selected'));
+                    document.querySelectorAll('.opt-item').forEach(el => el.classList.remove('selected'));
                     this.classList.add('selected');
-                    answers[currentIndex].selected = this.dataset.value;
+                    answers[currentIndex].selected = opt;
                 });
                 optionsContainer.appendChild(div);
             });
-            fillInput.value = '';
         } else {
             fillContainer.classList.remove('hidden');
-            const prevFill = answers[currentIndex]?.selected || '';
-            fillInput.value = prevFill;
+            fillInput.value = answers[currentIndex] ? answers[currentIndex].selected : '';
             fillInput.oninput = function() {
                 if (examSubmitted) return;
                 answers[currentIndex].selected = this.value.trim();
             };
         }
-        progressIndicator.textContent = `${currentIndex+1} / ${currentQuestions.length}`;
+        progressIndicator.textContent = (currentIndex+1) + ' / ' + currentQuestions.length;
     }
 
     function startTimer() {
         if (timerInterval) clearInterval(timerInterval);
         timerInterval = setInterval(() => {
-            if (examSubmitted) {
-                clearInterval(timerInterval);
-                return;
-            }
+            if (examSubmitted) { clearInterval(timerInterval); return; }
             timeSeconds--;
-            
-            if (timeSeconds <= 300) {
-                timerDisplay.classList.add('warning');
-            }
-            
+            if (timeSeconds <= 300) timerDisplay.classList.add('warning');
             if (timeSeconds <= 0) {
                 clearInterval(timerInterval);
-                alert('⏰ Time is up! Your exam will be submitted automatically.');
+                alert('Time is up!');
                 submitExam();
                 return;
             }
             const mins = Math.floor(timeSeconds / 60);
             const secs = timeSeconds % 60;
-            timerDisplay.textContent = `${String(mins).padStart(2,'0')}:${String(secs).padStart(2,'0')}`;
+            timerDisplay.textContent = String(mins).padStart(2,'0') + ':' + String(secs).padStart(2,'0');
         }, 1000);
     }
 
@@ -698,7 +509,7 @@
         let correct = 0;
         for (let i = 0; i < currentQuestions.length; i++) {
             const q = currentQuestions[i];
-            const userAns = answers[i]?.selected?.trim() || '';
+            const userAns = answers[i] ? answers[i].selected : '';
             if (q.type === 'mcq') {
                 if (userAns === q.answer) correct++;
             } else {
@@ -710,9 +521,7 @@
 
     function getDuration() {
         const elapsed = 1800 - timeSeconds;
-        const mins = Math.floor(elapsed / 60);
-        const secs = elapsed % 60;
-        return `${String(mins).padStart(2,'0')}:${String(secs).padStart(2,'0')}`;
+        return String(Math.floor(elapsed / 60)).padStart(2,'0') + ':' + String(elapsed % 60).padStart(2,'0');
     }
 
     function getStudentAnswers() {
@@ -720,10 +529,10 @@
             question: q.question,
             type: q.type,
             answer: q.answer,
-            userAnswer: answers[i]?.selected || 'Not answered',
+            userAnswer: answers[i] ? answers[i].selected : 'Not answered',
             isCorrect: q.type === 'mcq' 
-                ? (answers[i]?.selected === q.answer)
-                : (answers[i]?.selected?.toLowerCase() === q.answer.toLowerCase())
+                ? (answers[i] && answers[i].selected === q.answer)
+                : (answers[i] && answers[i].selected && answers[i].selected.toLowerCase() === q.answer.toLowerCase())
         }));
     }
 
@@ -737,7 +546,6 @@
         const percentage = ((score / 20) * 100).toFixed(1);
         const answersDetail = getStudentAnswers();
 
-        // Prepare result data
         const resultData = {
             jetc: studentData.jetc,
             reg: studentData.reg,
@@ -750,35 +558,33 @@
             answers: answersDetail
         };
 
-        // Show result first
+        // Show result
         examView.classList.add('hidden');
         resultView.classList.remove('hidden');
+        registrationView.classList.add('hidden');
         finalScore.textContent = score;
         resultName.textContent = studentData.name;
         resultJETC.textContent = studentData.jetc;
         resultReg.textContent = studentData.reg;
 
         // Save to Google Sheets
-        googleSaveStatus.textContent = '⏳ Saving to Google Sheets...';
-        googleSaveStatus.className = 'github-status saving';
-
-        // Check if URL is configured
-        if (GOOGLE_SCRIPT_URL === 'https://script.google.com/macros/s/AKfycbyTq4yR6u8ZGJD72NQdhdhfXsjxG5jL6XoQJpaD0FdYAK6S4AXASMcqwNHyW34ZAxU/exec') {
-            googleSaveStatus.innerHTML = '⚠️ Google Sheets not configured. Results saved locally only.';
-            googleSaveStatus.className = 'github-status error';
+        if (GOOGLE_SCRIPT_URL === 'YOUR_GOOGLE_APPS_SCRIPT_URL_HERE') {
+            googleSaveStatus.textContent = 'Google Sheets URL not configured. Saved locally.';
+            googleSaveStatus.className = 'save-status error';
         } else {
+            googleSaveStatus.textContent = 'Saving...';
+            googleSaveStatus.className = 'save-status saving';
             const result = await saveToGoogleSheets(resultData);
-            
             if (result.success) {
-                googleSaveStatus.innerHTML = '✅ Successfully saved to Google Sheets!';
-                googleSaveStatus.className = 'github-status success';
+                googleSaveStatus.textContent = 'Saved to Google Sheets!';
+                googleSaveStatus.className = 'save-status success';
             } else {
-                googleSaveStatus.textContent = `⚠️ Save failed: ${result.error}`;
-                googleSaveStatus.className = 'github-status error';
+                googleSaveStatus.textContent = 'Save failed: ' + result.error;
+                googleSaveStatus.className = 'save-status error';
             }
         }
 
-        // Also save to localStorage as backup
+        // Backup to localStorage
         let allRecords = JSON.parse(localStorage.getItem('metrology_exam_records') || '[]');
         allRecords.push(resultData);
         localStorage.setItem('metrology_exam_records', JSON.stringify(allRecords));
@@ -787,56 +593,35 @@
     // ============================================================
     // ANTI-CHEATING
     // ============================================================
-    function handleVisibilityChange() {
-        if (document.hidden && !examSubmitted && !resultView.classList.contains('hidden') === false) {
-            alert('⚠️ Window minimized or tab switched. Your exam will be submitted.');
-            if (!examSubmitted) submitExam();
+    document.addEventListener('visibilitychange', function() {
+        if (document.hidden && !examSubmitted) {
+            alert('Do not switch tabs!');
         }
-    }
-    document.addEventListener('visibilitychange', handleVisibilityChange);
+    });
 
     document.addEventListener('keydown', function(e) {
         if (e.key === 'F12' || (e.ctrlKey && e.shiftKey && ['I','J','C'].includes(e.key.toUpperCase()))) {
             e.preventDefault();
-            alert('Developer tools are disabled during the exam.');
-        }
-        if (e.ctrlKey && ['u'].includes(e.key.toLowerCase())) {
-            e.preventDefault();
-            alert('View source is disabled during the exam.');
         }
     });
-
-    function checkWindowSize() {
-        if (window.innerWidth < 400 || window.innerHeight < 400) {
-            if (!examSubmitted && !resultView.classList.contains('hidden') === false) {
-                alert('📱 Screen size too small. Exam submitted to prevent cheating.');
-                if (!examSubmitted) submitExam();
-            }
-        }
-    }
-    window.addEventListener('resize', checkWindowSize);
-    window.addEventListener('load', checkWindowSize);
 
     // ============================================================
     // START EXAM
     // ============================================================
     function startExam() {
         if (!authenticateStudent()) return;
-
-        regView.classList.add('hidden');
+        registrationView.classList.add('hidden');
         examView.classList.remove('hidden');
         resultView.classList.add('hidden');
-
         regBadge.textContent = studentData.jetc;
         studentNameSpan.textContent = studentData.name;
-
         currentQuestions = pick20Questions();
-        answers = currentQuestions.map(() => ({ selected: null }));
+        answers = currentQuestions.map(function() { return { selected: null }; });
         currentIndex = 0;
         examSubmitted = false;
         timeSeconds = 1800;
         timerDisplay.classList.remove('warning');
-
+        timerDisplay.textContent = '30:00';
         renderQuestion();
         startTimer();
     }
@@ -845,9 +630,8 @@
     // EVENT LISTENERS
     // ============================================================
     authBtn.addEventListener('click', startExam);
-    
-    jetcInput.addEventListener('keypress', (e) => { if (e.key === 'Enter') startExam(); });
-    regInput.addEventListener('keypress', (e) => { if (e.key === 'Enter') startExam(); });
+    jetcInput.addEventListener('keypress', function(e) { if (e.key === 'Enter') startExam(); });
+    regInput.addEventListener('keypress', function(e) { if (e.key === 'Enter') startExam(); });
 
     nextBtn.addEventListener('click', function() {
         if (examSubmitted) return;
@@ -867,24 +651,13 @@
 
     submitBtn.addEventListener('click', function() {
         if (examSubmitted) return;
-        if (confirm('Submit your exam? You cannot change answers after submission.')) {
+        if (confirm('Submit exam?')) {
             submitExam();
         }
     });
 
-    // ============================================================
-    // INIT
-    // ============================================================
-    console.log('✅ Metrology Quiz loaded.');
-    console.log(`📚 ${STUDENTS.length} students loaded.`);
-    console.log(`📝 ${FULL_QUESTIONS.length} questions available.`);
-    console.log('📁 Google Sheets integration ready.');
-
-    if (GOOGLE_SCRIPT_URL === 'https://script.google.com/macros/s/AKfycbyTq4yR6u8ZGJD72NQdhdhfXsjxG5jL6XoQJpaD0FdYAK6S4AXASMcqwNHyW34ZAxU/exec') {
-        console.warn('⚠️ Please update GOOGLE_SCRIPT_URL with your Google Apps Script Web App URL.');
-    } else {
-        console.log('✅ Google Sheets URL configured.');
-    }
+    // Init
+    console.log('Metrology Quiz loaded');
 })();
 </script>
 </body>
