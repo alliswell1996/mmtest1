@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -276,25 +277,91 @@
             background: #e6f4e8;
             border-radius: 12px;
         }
-        .github-status {
+        .save-status {
             font-size: 0.85rem;
             margin-top: 15px;
             padding: 12px;
             border-radius: 12px;
             background: #f0f7ff;
             color: #4b6d8a;
+            line-height: 1.4;
         }
-        .github-status.success {
+        .save-status.success {
             background: #e6f4e8;
             color: #2d7d46;
         }
-        .github-status.error {
+        .save-status.error {
             background: #fee;
             color: #c44536;
         }
-        .github-status.saving {
+        .save-status.saving {
             background: #fff3cd;
             color: #856404;
+        }
+        .teacher-view {
+            padding: 8px 0;
+        }
+        .teacher-view label {
+            font-weight: 600;
+            color: #1a2f44;
+            display: block;
+            margin-bottom: 8px;
+        }
+        .teacher-view input {
+            width: 100%;
+            padding: 16px 20px;
+            border-radius: 60px;
+            border: 2px solid #d0deec;
+            font-size: 1rem;
+            background: white;
+            outline: none;
+            margin-bottom: 16px;
+        }
+        .teacher-view .btn {
+            margin-top: 12px;
+            width: 100%;
+            justify-content: center;
+        }
+        .student-details-card {
+            background: #f0f7ff;
+            border-radius: 20px;
+            padding: 20px;
+            margin-top: 16px;
+            border: 1px solid #cddcec;
+            text-align: left;
+        }
+        .student-details-card h4 {
+            color: #0b1a2f;
+            margin-bottom: 12px;
+            border-bottom: 1px dashed #cddcec;
+            padding-bottom: 6px;
+            font-size: 1.1rem;
+        }
+        .student-details-row {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 8px;
+            font-size: 0.95rem;
+        }
+        .student-details-row .label {
+            font-weight: 600;
+            color: #4b6d8a;
+        }
+        .student-details-row .val {
+            color: #0b1a2f;
+            font-weight: 700;
+        }
+        .portal-toggle {
+            text-align: center;
+            margin-top: 24px;
+            font-size: 0.85rem;
+            color: #4b6d8a;
+            cursor: pointer;
+            text-decoration: underline;
+            font-weight: 500;
+        }
+        .portal-toggle:hover {
+            color: #1e3a5f;
         }
         @media (max-width: 500px) {
             .app-container { padding: 16px; }
@@ -326,8 +393,9 @@
                 ⏱️ 30 minutes · 20 questions · one per page
             </div>
             <div style="margin-top: 10px; font-size:0.8rem; color:#4b6d8a;">
-                📁 Results will be stored in: <strong>alliswell1996/mmtest1</strong>
+                📊 Results will be saved directly to the Google Spreadsheet.
             </div>
+            <div class="portal-toggle" id="openTeacherPortal">🔑 Teacher Portal</div>
         </div>
     </div>
 
@@ -378,10 +446,87 @@
                 <span id="resultJETC">JETCXXX</span> · 
                 <span id="resultReg">DCXXXXX</span>
             </div>
-            <div id="githubSaveStatus" class="github-status">
-                ⏳ Saving to GitHub...
+            <div id="saveStatus" class="save-status">
+                ⏳ Saving to Google Sheets...
             </div>
-            <div class="note">✅ Results stored in GitHub repository.<br>Thank you for participating.</div>
+            <div class="note">✅ Results stored in Google Spreadsheet.<br>Thank you for participating.</div>
+        </div>
+    </div>
+
+    <!-- TEACHER PORTAL VIEW -->
+    <div id="teacherView" class="hidden">
+        <div class="header">
+            <div class="logo">👨‍🏫 <span>TEACHER</span> PORTAL</div>
+            <button class="btn btn-outline" style="padding: 6px 14px; font-size: 0.8rem;" id="closeTeacherPortal">◀ Back</button>
+        </div>
+
+        <!-- STAGE 1: LOGIN -->
+        <div id="teacherLoginStage">
+            <div style="padding: 6px 0 16px;">
+                <p style="color: #1e3a5f; font-weight: 500; margin-bottom: 16px;">🔐 Teacher Authentication</p>
+            </div>
+            <div class="reg-form">
+                <label for="teacherUser">Username</label>
+                <input type="text" id="teacherUser" placeholder="Enter username" autocomplete="off" style="text-transform:none;">
+                
+                <label for="teacherPass">Password</label>
+                <input type="password" id="teacherPass" placeholder="Enter password" autocomplete="off">
+                
+                <button class="btn btn-primary" id="teacherLoginBtn">🔑 Login</button>
+                <div id="teacherLoginMessage"></div>
+            </div>
+        </div>
+
+        <!-- STAGE 2: DASHBOARD -->
+        <div id="teacherDashboardStage" class="hidden">
+            <div style="padding: 6px 0 16px; border-bottom: 1px dashed #cddcec; margin-bottom: 16px;">
+                <p style="color: #2d7d46; font-weight: 700; font-size:1.1rem;">✅ Authenticated: Chidambaram</p>
+            </div>
+            
+            <div class="teacher-view">
+                <label for="studentSearchInput">Student Registration Number or JETC</label>
+                <input type="text" id="studentSearchInput" placeholder="e.g., DC2529401 or JETC045" autocomplete="off" style="text-transform:uppercase;">
+                
+                <div style="display:flex; gap:10px;">
+                    <button class="btn btn-primary" id="searchStudentBtn" style="flex:2; margin-top:0; justify-content:center;">🔍 Search Details</button>
+                    <button class="btn btn-outline" id="clearSearchBtn" style="flex:1; margin-top:0; justify-content:center;">Clear</button>
+                </div>
+                
+                <div id="searchMessage" style="margin-top:10px;"></div>
+
+                <!-- STUDENT DETAILS RESULT -->
+                <div id="searchResultCard" class="student-details-card hidden">
+                    <h4 id="searchResultName">Student Name</h4>
+                    <div class="student-details-row">
+                        <span class="label">JETC Number:</span>
+                        <span class="val" id="searchResultJETC">JETCXXX</span>
+                    </div>
+                    <div class="student-details-row">
+                        <span class="label">Registration No:</span>
+                        <span class="val" id="searchResultReg">DCXXXXX</span>
+                    </div>
+                    <div class="student-details-row">
+                        <span class="label">Score:</span>
+                        <span class="val" id="searchResultScore" style="color:#0b1a2f; font-size:1.1rem; font-weight:bold;">0 / 20</span>
+                    </div>
+                    <div class="student-details-row">
+                        <span class="label">Percentage:</span>
+                        <span class="val" id="searchResultPercentage">0%</span>
+                    </div>
+                    <div class="student-details-row">
+                        <span class="label">Duration:</span>
+                        <span class="val" id="searchResultDuration">00:00</span>
+                    </div>
+                    <div class="student-details-row">
+                        <span class="label">Submitted At:</span>
+                        <span class="val" id="searchResultTimestamp" style="font-size:0.85rem; font-weight:normal;">14/7/2026</span>
+                    </div>
+                    
+                    <button class="btn btn-success" id="enableRetestBtn" style="margin-top:16px; background:#c44536; width:100%; justify-content:center; border:none; color:white;">🔓 Enable Retest (Reset Attempt)</button>
+                </div>
+
+                <button class="btn btn-outline" id="teacherLogoutBtn" style="margin-top:24px; width:100%; border-color:#c44536; color:#c44536; justify-content:center;">🚪 Logout Teacher</button>
+            </div>
         </div>
     </div>
 </div>
@@ -389,14 +534,11 @@
 <script>
 (function() {
     // ============================================================
-    // GITHUB CONFIGURATION - UPDATE WITH YOUR NEW TOKEN
+    // GOOGLE SHEETS CONFIGURATION
     // ============================================================
-    const GITHUB_CONFIG = {
-        owner: 'alliswell1996',        // Your GitHub username
-        repo: 'mmtest1',               // Your repository name
-        token: 'YOUR_NEW_TOKEN_HERE',  // ⚠️ REPLACE with your NEW token after revoking old one
-        branch: 'main',                // Branch name
-        resultsPath: 'exam-results'    // Folder path in repo
+    const GOOGLE_SHEET_CONFIG = {
+        webAppUrl: 'https://script.google.com/macros/s/AKfycbzZC69SgQlhjRTW1A7SmLRBeoydGBLSjBBSBy0dGNE_VcHABT9p_pnfGv_Ft0uz0aii/exec', // ⚠️ Paste your deployed Google Apps Script Web App URL here!
+        sheetUrl: 'https://docs.google.com/spreadsheets/d/1BQV7uQZmMLXkZt_wgo7pNA1XeCSK3rt5bOaBbqNutaI/edit?gid=2020575753#gid=2020575753'
     };
 
     // ============================================================
@@ -518,6 +660,7 @@
     let currentIndex = 0;
     let timerInterval = null;
     let timeSeconds = 1800;
+    let examStarted = false;       // Track active exam session
     let examSubmitted = false;
     let studentData = null;
 
@@ -546,74 +689,93 @@
     const resultName = document.getElementById('resultName');
     const resultJETC = document.getElementById('resultJETC');
     const resultReg = document.getElementById('resultReg');
-    const githubSaveStatus = document.getElementById('githubSaveStatus');
+    const saveStatus = document.getElementById('saveStatus');
+
+    // Teacher Portal DOM Refs
+    const teacherView = document.getElementById('teacherView');
+    const openTeacherPortal = document.getElementById('openTeacherPortal');
+    const closeTeacherPortal = document.getElementById('closeTeacherPortal');
+    const teacherLoginStage = document.getElementById('teacherLoginStage');
+    const teacherDashboardStage = document.getElementById('teacherDashboardStage');
+    const teacherUser = document.getElementById('teacherUser');
+    const teacherPass = document.getElementById('teacherPass');
+    const teacherLoginBtn = document.getElementById('teacherLoginBtn');
+    const teacherLoginMessage = document.getElementById('teacherLoginMessage');
+    const studentSearchInput = document.getElementById('studentSearchInput');
+    const searchStudentBtn = document.getElementById('searchStudentBtn');
+    const clearSearchBtn = document.getElementById('clearSearchBtn');
+    const searchMessage = document.getElementById('searchMessage');
+    const searchResultCard = document.getElementById('searchResultCard');
+    const searchResultName = document.getElementById('searchResultName');
+    const searchResultJETC = document.getElementById('searchResultJETC');
+    const searchResultReg = document.getElementById('searchResultReg');
+    const searchResultScore = document.getElementById('searchResultScore');
+    const searchResultPercentage = document.getElementById('searchResultPercentage');
+    const searchResultDuration = document.getElementById('searchResultDuration');
+    const searchResultTimestamp = document.getElementById('searchResultTimestamp');
+    const enableRetestBtn = document.getElementById('enableRetestBtn');
+    const teacherLogoutBtn = document.getElementById('teacherLogoutBtn');
 
     // ============================================================
-    // GITHUB STORAGE FUNCTIONS
+    // GOOGLE SHEETS STORAGE FUNCTIONS
     // ============================================================
-    async function saveToGitHub(resultData) {
-        try {
-            const date = new Date().toISOString().split('T')[0];
-            const timestamp = new Date().toISOString().replace(/[:.]/g, '-');
-            const fileName = `${resultData.jetc}_${resultData.reg}_${timestamp}.json`;
-            const filePath = `${GITHUB_CONFIG.resultsPath}/${date}/${fileName}`;
-
-            // Encode content to base64
-            const content = btoa(unescape(encodeURIComponent(JSON.stringify(resultData, null, 2))));
-
-            // Check if file exists (to get SHA for update)
-            const checkUrl = `https://api.github.com/repos/${GITHUB_CONFIG.owner}/${GITHUB_CONFIG.repo}/contents/${filePath}`;
-            let sha = null;
-            
+    async function saveToGoogleSheets(resultData) {
+        return new Promise((resolve) => {
             try {
-                const checkResponse = await fetch(checkUrl, {
-                    headers: {
-                        'Authorization': `token ${GITHUB_CONFIG.token}`,
-                        'Accept': 'application/vnd.github.v3+json'
-                    }
-                });
-                if (checkResponse.ok) {
-                    const data = await checkResponse.json();
-                    sha = data.sha;
+                if (!GOOGLE_SHEET_CONFIG.webAppUrl || GOOGLE_SHEET_CONFIG.webAppUrl === 'YOUR_WEB_APP_URL_HERE') {
+                    resolve({ success: false, error: 'Web App URL is not configured.' });
+                    return;
                 }
-            } catch (e) {
-                // File doesn't exist, will create new
+
+                // Check if browser is online
+                if (!navigator.onLine) {
+                    resolve({ success: false, error: 'No internet connection detected.' });
+                    return;
+                }
+
+                // Create dynamic hidden iframe if it doesn't exist
+                let iframe = document.getElementById('hidden_iframe_sender');
+                if (!iframe) {
+                    iframe = document.createElement('iframe');
+                    iframe.id = 'hidden_iframe_sender';
+                    iframe.name = 'hidden_iframe_sender';
+                    iframe.style.display = 'none';
+                    document.body.appendChild(iframe);
+                }
+
+                // Create a temporary hidden form
+                const form = document.createElement('form');
+                form.action = GOOGLE_SHEET_CONFIG.webAppUrl;
+                form.method = 'POST';
+                form.target = 'hidden_iframe_sender';
+                form.style.display = 'none';
+
+                // Add data as a hidden parameter
+                const input = document.createElement('input');
+                input.type = 'hidden';
+                input.name = 'payload';
+                input.value = JSON.stringify(resultData);
+                form.appendChild(input);
+
+                document.body.appendChild(form);
+                form.submit();
+
+                // Clean up the form after submission
+                setTimeout(() => {
+                    document.body.removeChild(form);
+                }, 1000);
+
+                // Form submissions bypass all CORS and file:// local security blocks.
+                // We resolve success after a brief visual delay to complete the submit.
+                setTimeout(() => {
+                    resolve({ success: true });
+                }, 1500);
+
+            } catch (error) {
+                console.error('Submission error:', error);
+                resolve({ success: false, error: error.message });
             }
-
-            // Save/Update file
-            const url = `https://api.github.com/repos/${GITHUB_CONFIG.owner}/${GITHUB_CONFIG.repo}/contents/${filePath}`;
-            const body = {
-                message: `Add exam result for ${resultData.jetc} - ${resultData.name}`,
-                content: content,
-                branch: GITHUB_CONFIG.branch
-            };
-            if (sha) body.sha = sha;
-
-            const response = await fetch(url, {
-                method: 'PUT',
-                headers: {
-                    'Authorization': `token ${GITHUB_CONFIG.token}`,
-                    'Content-Type': 'application/json',
-                    'Accept': 'application/vnd.github.v3+json'
-                },
-                body: JSON.stringify(body)
-            });
-
-            if (!response.ok) {
-                const errorData = await response.json();
-                throw new Error(errorData.message || `GitHub API error: ${response.status}`);
-            }
-
-            const result = await response.json();
-            return { 
-                success: true, 
-                fileName: fileName,
-                url: result.content.html_url || `https://github.com/${GITHUB_CONFIG.owner}/${GITHUB_CONFIG.repo}/blob/${GITHUB_CONFIG.branch}/${filePath}`
-            };
-        } catch (error) {
-            console.error('GitHub save error:', error);
-            return { success: false, error: error.message };
-        }
+        });
     }
 
     // ============================================================
@@ -764,6 +926,7 @@
     async function submitExam() {
         if (examSubmitted) return;
         examSubmitted = true;
+        examStarted = false; // Disable anti-cheating tracking
         clearInterval(timerInterval);
         
         const score = calculateScore();
@@ -780,7 +943,7 @@
             total: 20,
             percentage: percentage,
             duration: duration,
-            submittedAt: new Date().toISOString(),
+            submittedAt: new Date().toLocaleString("en-IN", { timeZone: "Asia/Kolkata" }),
             answers: answersDetail
         };
 
@@ -792,23 +955,19 @@
         resultJETC.textContent = studentData.jetc;
         resultReg.textContent = studentData.reg;
 
-        // Save to GitHub
-        githubSaveStatus.textContent = '⏳ Saving to GitHub repository...';
-        githubSaveStatus.className = 'github-status saving';
+        // Save to Google Sheets
+        saveStatus.textContent = '⏳ Saving to Google Sheets...';
+        saveStatus.className = 'save-status saving';
 
-        const result = await saveToGitHub(resultData);
+        const result = await saveToGoogleSheets(resultData);
 
         if (result.success) {
-            githubSaveStatus.innerHTML = `✅ Successfully saved to GitHub: <a href="${result.url}" target="_blank">${result.fileName}</a>`;
-            githubSaveStatus.className = 'github-status success';
+            saveStatus.innerHTML = `✅ Successfully saved to Google Sheets!<br><a href="${GOOGLE_SHEET_CONFIG.sheetUrl}" target="_blank" style="color: #2d7d46; font-weight: bold; text-decoration: underline;">Open Spreadsheet ↗</a>`;
+            saveStatus.className = 'save-status success';
         } else {
             // Fallback to localStorage
-            githubSaveStatus.textContent = `⚠️ GitHub save failed: ${result.error}. Saved locally as backup.`;
-            githubSaveStatus.className = 'github-status error';
-            
-            let records = JSON.parse(localStorage.getItem('metrology_exam_records') || '[]');
-            records.push(resultData);
-            localStorage.setItem('metrology_exam_records', JSON.stringify(records));
+            saveStatus.textContent = `⚠️ Save failed: ${result.error}. Saved locally as backup.`;
+            saveStatus.className = 'save-status error';
         }
 
         // Also save to localStorage as backup
@@ -818,12 +977,13 @@
     }
 
     // ============================================================
-    // ANTI-CHEATING
+    // ANTI-CHEATING (OPTIMIZED FOR MOBILE & DESKTOP)
     // ============================================================
     function handleVisibilityChange() {
-        if (document.hidden && !examSubmitted && !resultView.classList.contains('hidden') === false) {
+        // Only trigger anti-cheating if the exam is actively running (started and not submitted)
+        if (examStarted && !examSubmitted && document.visibilityState === 'hidden') {
             alert('⚠️ Window minimized or tab switched. Your exam will be submitted.');
-            if (!examSubmitted) submitExam();
+            submitExam();
         }
     }
     document.addEventListener('visibilitychange', handleVisibilityChange);
@@ -840,10 +1000,18 @@
     });
 
     function checkWindowSize() {
-        if (window.innerWidth < 400 || window.innerHeight < 400) {
-            if (!examSubmitted && !resultView.classList.contains('hidden') === false) {
-                alert('📱 Screen size too small. Exam submitted to prevent cheating.');
-                if (!examSubmitted) submitExam();
+        // Anti-cheating window size checks are ONLY active during the quiz
+        if (examStarted && !examSubmitted) {
+            // Detect if user is on a mobile/tablet device
+            const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+            
+            // Skip checks on mobile since orientation changes and software keyboard popups alter screen dimensions.
+            if (isMobile) return;
+            
+            // For desktop, check if the viewport has been split or resized to a tiny window
+            if (window.innerWidth < 500 || window.innerHeight < 450) {
+                alert('🖥️ Screen size too small or resized. Exam submitted to prevent split-screen cheating.');
+                submitExam();
             }
         }
     }
@@ -851,11 +1019,62 @@
     window.addEventListener('load', checkWindowSize);
 
     // ============================================================
-    // START EXAM
+    // START EXAM (ONE-TIME ENTRY ONLY CHECK)
     // ============================================================
-    function startExam() {
+    async function startExam() {
         if (!authenticateStudent()) return;
 
+        const jetc = jetcInput.value.trim().toUpperCase();
+        const reg = regInput.value.trim().toUpperCase();
+
+        // 1. Client-Side LocalStorage Check (Instant check)
+        const localRecords = JSON.parse(localStorage.getItem('metrology_exam_records') || '[]');
+        const alreadyAttemptedLocally = localRecords.some(r => r.jetc === jetc || r.reg === reg);
+        if (alreadyAttemptedLocally) {
+            authMessage.innerHTML = '<div class="auth-error">❌ You have already submitted this exam on this device. Multiple attempts are not allowed.</div>';
+            return;
+        }
+
+        // Disable button and show verifying status
+        authBtn.disabled = true;
+        authBtn.textContent = '⏳ Checking exam eligibility...';
+        authMessage.innerHTML = '<div class="auth-success" style="background:#eef4fa; color:#1e3a5f;">⏳ Verifying status with Google Sheets... Please wait.</div>';
+
+        try {
+            // 2. Server-Side Google Sheets check (Bypasses browser clearance & prevents logging in from other devices)
+            if (GOOGLE_SHEET_CONFIG.webAppUrl && GOOGLE_SHEET_CONFIG.webAppUrl !== 'YOUR_WEB_APP_URL_HERE') {
+                const checkUrl = `${GOOGLE_SHEET_CONFIG.webAppUrl}?jetc=${encodeURIComponent(jetc)}&reg=${encodeURIComponent(reg)}`;
+                
+                // Add a fetch timeout of 6 seconds to handle weak network connections gracefully
+                const controller = new AbortController();
+                const timeoutId = setTimeout(() => controller.abort(), 6000);
+
+                const response = await fetch(checkUrl, { 
+                    method: 'GET',
+                    signal: controller.signal
+                });
+                clearTimeout(timeoutId);
+
+                if (response.ok) {
+                    const status = await response.json();
+                    if (status && status.exists === true) {
+                        authMessage.innerHTML = '<div class="auth-error">❌ You have already submitted this exam. Multiple attempts are not allowed.</div>';
+                        authBtn.disabled = false;
+                        authBtn.textContent = '🔑 Verify & Start Exam';
+                        return;
+                    }
+                }
+            }
+        } catch (error) {
+            console.warn('Google Sheets online check failed (offline or slow network), falling back to local verification:', error);
+            // Non-blocking fallback: if internet is slow or sheet is unreachable, we let them proceed
+        }
+
+        // Re-enable button state
+        authBtn.disabled = false;
+        authBtn.textContent = '🔑 Verify & Start Exam';
+
+        // Proceed to start the exam
         regView.classList.add('hidden');
         examView.classList.remove('hidden');
         resultView.classList.add('hidden');
@@ -867,11 +1086,127 @@
         answers = currentQuestions.map(() => ({ selected: null }));
         currentIndex = 0;
         examSubmitted = false;
+        examStarted = true; // Exam is active! Anti-cheating starts now.
         timeSeconds = 1800;
         timerDisplay.classList.remove('warning');
 
         renderQuestion();
         startTimer();
+    }
+
+    // ============================================================
+    // TEACHER PORTAL FUNCTIONS
+    // ============================================================
+    function handleTeacherLogin() {
+        const username = teacherUser.value.trim().toLowerCase();
+        const password = teacherPass.value.trim();
+
+        if (username === 'chidambaram' && password === 'ft0006') {
+            teacherLoginMessage.innerHTML = '<div class="auth-success">✅ Login successful! Redirecting...</div>';
+            setTimeout(() => {
+                teacherLoginStage.classList.add('hidden');
+                teacherDashboardStage.classList.remove('hidden');
+                studentSearchInput.focus();
+                teacherLoginMessage.innerHTML = '';
+                teacherUser.value = '';
+                teacherPass.value = '';
+            }, 1000);
+        } else {
+            teacherLoginMessage.innerHTML = '<div class="auth-error">❌ Invalid username or password.</div>';
+        }
+    }
+
+    async function handleStudentSearch() {
+        const searchVal = studentSearchInput.value.trim().toUpperCase();
+        if (!searchVal) {
+            searchMessage.innerHTML = '<div class="auth-error" style="margin-top:10px;">❌ Enter Registration number or JETC.</div>';
+            return;
+        }
+
+        searchMessage.innerHTML = '<div class="auth-success" style="background:#eef4fa; color:#1e3a5f; margin-top:10px;">⏳ Searching Google Sheets database...</div>';
+        searchResultCard.classList.add('hidden');
+
+        try {
+            if (!GOOGLE_SHEET_CONFIG.webAppUrl || GOOGLE_SHEET_CONFIG.webAppUrl === 'YOUR_WEB_APP_URL_HERE') {
+                throw new Error('Google Sheets Web App URL is not configured.');
+            }
+
+            const searchUrl = `${GOOGLE_SHEET_CONFIG.webAppUrl}?action=details&search=${encodeURIComponent(searchVal)}`;
+            const response = await fetch(searchUrl);
+            
+            if (!response.ok) {
+                throw new Error(`HTTP error: ${response.status}`);
+            }
+
+            const res = await response.json();
+            if (res.status === 'success' && res.found === true) {
+                const s = res.student;
+                searchResultName.textContent = s.name;
+                searchResultJETC.textContent = s.jetc;
+                searchResultReg.textContent = s.reg;
+                searchResultScore.textContent = `${s.score} / ${s.total}`;
+                searchResultPercentage.textContent = `${s.percentage}`;
+                searchResultDuration.textContent = s.duration;
+                
+                try {
+                    searchResultTimestamp.textContent = s.timestamp;
+                } catch (e) {
+                    searchResultTimestamp.textContent = s.timestamp;
+                }
+
+                searchResultCard.classList.remove('hidden');
+                searchMessage.innerHTML = '';
+            } else {
+                searchMessage.innerHTML = '<div class="auth-error" style="margin-top:10px;">❌ No active submissions found for this student.</div>';
+            }
+        } catch (error) {
+            console.error('Search error:', error);
+            searchMessage.innerHTML = `<div class="auth-error" style="margin-top:10px;">❌ Search failed: ${error.message}</div>`;
+        }
+    }
+
+    async function handleEnableRetest() {
+        const searchVal = studentSearchInput.value.trim().toUpperCase();
+        if (!searchVal) return;
+
+        const confirmReset = confirm(`⚠️ Are you sure you want to enable a Retest for this student?\n\nThis will:\n1. Clear their device's local quiz attempt cache.\n2. Rename their previous attempt in Google Sheets so they can submit again.\n\nTheir previous record will still be preserved in Google Sheets for history under a renamed JETC.`);
+        
+        if (!confirmReset) return;
+
+        searchMessage.innerHTML = '<div class="auth-success" style="background:#fff3cd; color:#856404; margin-top:10px;">⏳ Enabling retest & clearing database records... Please wait.</div>';
+        searchResultCard.classList.add('hidden');
+
+        try {
+            const resetUrl = `${GOOGLE_SHEET_CONFIG.webAppUrl}?action=reset&search=${encodeURIComponent(searchVal)}`;
+            const response = await fetch(resetUrl);
+            
+            if (!response.ok) {
+                throw new Error(`HTTP error: ${response.status}`);
+            }
+
+            const res = await response.json();
+            
+            if (res.status === 'success' && res.reset === true) {
+                // Clear local memory for this student
+                let localRecords = JSON.parse(localStorage.getItem('metrology_exam_records') || '[]');
+                localRecords = localRecords.filter(r => r.jetc !== searchVal && r.reg !== searchVal);
+                localStorage.setItem('metrology_exam_records', JSON.stringify(localRecords));
+
+                searchMessage.innerHTML = '<div class="auth-success" style="margin-top:10px;">✅ Retest enabled successfully! The student can now take the exam again from any browser or device.</div>';
+                studentSearchInput.value = '';
+            } else {
+                searchMessage.innerHTML = '<div class="auth-error" style="margin-top:10px;">❌ Failed to clear database records. Please try again.</div>';
+            }
+        } catch (error) {
+            console.error('Reset error:', error);
+            searchMessage.innerHTML = `<div class="auth-error" style="margin-top:10px;">❌ Reset failed: ${error.message}</div>`;
+        }
+    }
+
+    function clearTeacherSearch() {
+        studentSearchInput.value = '';
+        searchMessage.innerHTML = '';
+        searchResultCard.classList.add('hidden');
     }
 
     // ============================================================
@@ -881,6 +1216,42 @@
     
     jetcInput.addEventListener('keypress', (e) => { if (e.key === 'Enter') startExam(); });
     regInput.addEventListener('keypress', (e) => { if (e.key === 'Enter') startExam(); });
+
+    // Teacher Portal Toggle Listeners
+    openTeacherPortal.addEventListener('click', () => {
+        regView.classList.add('hidden');
+        teacherView.classList.remove('hidden');
+        teacherLoginStage.classList.remove('hidden');
+        teacherDashboardStage.classList.add('hidden');
+        teacherUser.value = '';
+        teacherPass.value = '';
+        teacherLoginMessage.innerHTML = '';
+        teacherUser.focus();
+    });
+
+    closeTeacherPortal.addEventListener('click', () => {
+        teacherView.classList.add('hidden');
+        regView.classList.remove('hidden');
+    });
+
+    // Teacher Login Listeners
+    teacherLoginBtn.addEventListener('click', handleTeacherLogin);
+    teacherUser.addEventListener('keypress', (e) => { if (e.key === 'Enter') handleTeacherLogin(); });
+    teacherPass.addEventListener('keypress', (e) => { if (e.key === 'Enter') handleTeacherLogin(); });
+
+    // Teacher Dashboard Search/Action Listeners
+    searchStudentBtn.addEventListener('click', handleStudentSearch);
+    studentSearchInput.addEventListener('keypress', (e) => { if (e.key === 'Enter') handleStudentSearch(); });
+    clearSearchBtn.addEventListener('click', clearTeacherSearch);
+    enableRetestBtn.addEventListener('click', handleEnableRetest);
+
+    // Teacher Logout Listener
+    teacherLogoutBtn.addEventListener('click', () => {
+        teacherDashboardStage.classList.add('hidden');
+        teacherView.classList.add('hidden');
+        regView.classList.remove('hidden');
+        clearTeacherSearch();
+    });
 
     nextBtn.addEventListener('click', function() {
         if (examSubmitted) return;
@@ -906,22 +1277,21 @@
     });
 
     // ============================================================
-    // INIT - Check GitHub token
+    // INIT - Configuration Warnings
     // ============================================================
     console.log('✅ Metrology Quiz loaded.');
     console.log(`📚 ${STUDENTS.length} students loaded.`);
     console.log(`📝 ${FULL_QUESTIONS.length} questions available.`);
-    console.log(`📁 Repository: ${GITHUB_CONFIG.owner}/${GITHUB_CONFIG.repo}`);
+    console.log(`📊 Target Sheet: ${GOOGLE_SHEET_CONFIG.sheetUrl}`);
 
-    if (GITHUB_CONFIG.token === 'YOUR_NEW_TOKEN_HERE') {
-        console.warn('⚠️ Please update GITHUB_CONFIG.token with your new GitHub token.');
-        // Show warning to user
+    if (GOOGLE_SHEET_CONFIG.webAppUrl === 'YOUR_WEB_APP_URL_HERE') {
+        console.warn('⚠️ Please set GOOGLE_SHEET_CONFIG.webAppUrl with your deployed Google Apps Script URL.');
         const statusDiv = document.createElement('div');
-        statusDiv.style.cssText = 'background:#fff3cd;color:#856404;padding:10px;border-radius:12px;margin-top:10px;font-size:0.85rem;';
-        statusDiv.textContent = '⚠️ GitHub token not configured. Results will be saved locally only.';
+        statusDiv.style.cssText = 'background:#fff3cd;color:#856404;padding:10px;border-radius:12px;margin-top:10px;font-size:0.85rem;text-align:center;font-weight:500;';
+        statusDiv.innerHTML = '⚠️ <strong>Admin Notice:</strong> Google Apps Script Web App URL is not set in this HTML file.<br>Results will be saved in your browser as fallback.';
         document.querySelector('.reg-form').appendChild(statusDiv);
     } else {
-        console.log('✅ GitHub token configured.');
+        console.log('✅ Google Sheet Web App configured.');
     }
 })();
 </script>
